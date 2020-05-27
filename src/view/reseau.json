@@ -1,0 +1,18 @@
+{
+  "lesLignes": [
+    {
+      "cle": 0,
+      "nom": "uneLigne"
+    },
+    {
+      "cle": 0,
+      "nom": "uneLigne"
+    }
+  ],
+  "lesBus": [
+    {
+      "numero": 42,
+      "cle": 0
+    }
+  ]
+}
