@@ -2,9 +2,8 @@ package dao;
 
 import java.util.ArrayList;
 
-import element.Bus;
-import element.LigneDeBus;
-import element.Reseau;
+import modele.LigneDeBus;
+import modele.Reseau;
 
 public class LigneDAOJSON extends DAO<LigneDeBus>{
 	
@@ -31,9 +30,9 @@ public class LigneDAOJSON extends DAO<LigneDeBus>{
 				present = true;
 		}
 		if(present == false) {
-			reseau.addLigne(obj);
 			obj.setCle(newCle);
 			newCle = newCle + 1;
+			reseau.addLigne(new LigneDeBus(obj.getNom(),obj.getListeArret(), obj.getCle()));
 			jsonManager.setData(reseau);
 			return obj;
 		}
@@ -42,7 +41,11 @@ public class LigneDAOJSON extends DAO<LigneDeBus>{
 	
 	public LigneDeBus delete(LigneDeBus obj) {
 		Reseau reseau = jsonManager.getData();
-		reseau.getLesLignes().remove(obj);
+		for(LigneDeBus l : reseau.getLesLignes()) {
+			if(l.getNom().equals(obj.getNom())) {
+				reseau.getLesLignes().remove(l);
+			}
+		}
 		jsonManager.setData(reseau);
 		return obj;
 	}
@@ -54,7 +57,7 @@ public class LigneDAOJSON extends DAO<LigneDeBus>{
 			if(l.getCle() == obj.getCle())
 			{
 				l.setNom(obj.getNom());
-				l.setListeArrets(obj.getListeArrets());
+				l.setListeArret(obj.getListeArret());
 			}
 		}
 		jsonManager.setData(reseau);
@@ -77,10 +80,10 @@ public class LigneDAOJSON extends DAO<LigneDeBus>{
 	public LigneDeBus findByName(String nom)
 	{
 		Reseau reseau = jsonManager.getData();
-		for(LigneDeBus b : reseau.getLesLignes())
+		for(LigneDeBus l : reseau.getLesLignes())
 		{
-			if(b.getNom() == nom)
-				return b;
+			if(l.getNom() == nom)
+				return l;
 		}
 		return null;
 	}

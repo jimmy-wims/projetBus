@@ -2,14 +2,14 @@ package dao;
 
 import java.util.ArrayList;
 
-import element.Arret;
-import element.LigneDeBus;
-import element.Reseau;
+import modele.Arret;
+import modele.LigneDeBus;
+import modele.Reseau;
 
 public class ArretDAOJSON extends DAO<Arret>{
 	
 	private static int newCle = 0;
-	private static ArretDAOJSON ArretDAO = new ArretDAOJSON();
+	private static ArretDAOJSON arretDAO = new ArretDAOJSON();
 	
 	private ArretDAOJSON()
 	{
@@ -17,58 +17,111 @@ public class ArretDAOJSON extends DAO<Arret>{
 	
 	public  static synchronized ArretDAOJSON getInstance()
 	{
-		if (ArretDAO  == null)
-			ArretDAO  = new ArretDAOJSON();
-		return ArretDAO;
+		if (arretDAO  == null)
+			arretDAO  = new ArretDAOJSON();
+		return arretDAO;
 	}
 
 	public Arret create(Arret obj) {
 		Reseau reseau = jsonManager.getData();
 		
-	}
-	
-	public Bus delete(Bus obj) {
-		Reseau reseau = jsonManager.getData();
-		ArrayList<Bus> lesBus = reseau.getLesBus();
-		lesBus.remove(obj);
-		return obj;
-	}
-	
-	public Bus update(Bus obj) {
-		Reseau reseau = jsonManager.getData();
-		for(Bus b : reseau.getLesBus())
-		{
-			if(b.getCle() == obj.getCle())
-			{
-				b.setNumero(obj.getNumero());
+		for(String s : obj.getListNomLigne() ) {
+			for(LigneDeBus l : reseau.getLesLignes()) {
+				if(l.getNom().equals(s))
+				{
+					obj.setCle(newCle);
+					System.out.println("arret -> " + l);
+					l.addArret(obj);
+					newCle = newCle + 1;
+				}
 			}
 		}
 		jsonManager.setData(reseau);
 		return obj;
 	}
 	
-	public ArrayList<Bus> saveAll(ArrayList<Bus> lesBus)
-	{
+	public Arret delete(Arret obj) {
 		Reseau reseau = jsonManager.getData();
-		reseau.setLesBus(lesBus);
+		ArrayList<Arret> lesArrets = new ArrayList<Arret>();
+		
+		for(LigneDeBus l : reseau.getLesLignes()) {
+			for(Arret a : l.getListeArret()) {
+				if(!a.getNom().equals(obj.getNom()))
+					lesArrets.add(a);
+			}
+			l.setListeArret(lesArrets);
+		}
 		jsonManager.setData(reseau);
-		return lesBus;
+		return obj;
 	}
 	
-	public ArrayList<Bus> findAll()
-	{
-		return jsonManager.getData().getLesBus();
+	public Arret update(Arret obj) {
+		Reseau reseau = jsonManager.getData();
+		
+		ArrayList<Arret> lesArrets = new ArrayList<Arret>();
+		
+		
+		for(LigneDeBus l : reseau.getLesLignes())
+		{
+			lesArrets.clear();
+			for(Arret a : l.getListeArret()) {
+				if(a.getCle() == obj.getCle())
+				{
+					lesArrets.add(obj);
+				}
+				else
+				{
+					lesArrets.add(a);
+				}
+			}
+			l.setListeArret(lesArrets);
+		}
+		
+		jsonManager.setData(reseau);
+		return obj;
 	}
 	
-	public Bus findByName(String numero)
+	public ArrayList<Arret> saveAll(ArrayList<Arret> lesArrets)
 	{
 		Reseau reseau = jsonManager.getData();
-		for(Bus b : reseau.getLesBus())
+		
+		for(LigneDeBus l : reseau.getLesLignes()) {
+			l.getListeArret().clear();
+			for(Arret a : lesArrets) {
+				for(String s : a.getListNomLigne() ) {
+					if(l.getNom().equals(s))
+						l.addArret(a);
+				}
+			}
+		}
+		
+		jsonManager.setData(reseau);
+		return lesArrets;
+	}
+	
+	public ArrayList<Arret> findAll()
+	{
+		Reseau reseau = jsonManager.getData();
+		ArrayList<Arret> listArret = new ArrayList<Arret>(); 
+		
+		for(LigneDeBus l : reseau.getLesLignes()) {
+			for(Arret a : l.getListeArret()) {
+				listArret.add(a);
+			}
+		}
+		return listArret;
+	}
+	
+	public Arret findByName(String nom)
+	{
+		Reseau reseau = jsonManager.getData();
+		for(LigneDeBus l : reseau.getLesLignes())
 		{
-			if(b.getNumero() == Integer.parseInt(numero))
-				return b;
+			for(Arret a : l.getListeArret()) {
+				if(a.getNom().equals(nom))
+					return a;
+			}
 		}
 		return null;
 	}
-	
 }
