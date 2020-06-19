@@ -2,16 +2,38 @@
   "lesLignes": [
     {
       "cle": 0,
-      "nom": "uneLigne"
+      "nom": "uneLigne",
+      "listeArret": [
+        {
+          "nom": "arret1",
+          "position": "ici",
+          "listNomLigne": [
+            "uneLigne",
+            "listeLigne"
+          ],
+          "cle": 1
+        }
+      ]
     },
     {
       "cle": 0,
-      "nom": "uneLigne"
+      "nom": "listeLigne",
+      "listeArret": [
+        {
+          "nom": "arret1",
+          "position": "ici",
+          "listNomLigne": [
+            "uneLigne",
+            "listeLigne"
+          ],
+          "cle": 1
+        }
+      ]
     }
   ],
   "lesBus": [
     {
-      "numero": 42,
+      "numero": 56,
       "cle": 0
     }
   ]
