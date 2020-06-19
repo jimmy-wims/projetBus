@@ -16,7 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
-import element.Reseau;
+import modele.Reseau;
 
 public class JSONManager {
 	private static JSONManager instance;
@@ -70,10 +70,16 @@ public class JSONManager {
 		{
 			// Le fichier n'est pas vide, on utilise la bibliothèque google
 			// pour remplir les objets automatiquement
+			//Type type = new TypeToken<Reseau>(){}.getType();
+			//reseau=gson.fromJson(json, type);
+			
+			System.out.println("ppo -> " + json);
+			
 			Type type = new TypeToken<Reseau>(){}.getType();
-			reseau=gson.fromJson(json.toString(), type);
-			//lesComptes=gson.fromJson(json, type);
+			reseau = gson.fromJson(json.toString(), type);
 		}
+		
+		System.out.println("ppo1 -> " + reseau);
 		
 		return reseau;
 	}
