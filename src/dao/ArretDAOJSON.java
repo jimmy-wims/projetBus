@@ -103,10 +103,19 @@ public class ArretDAOJSON extends DAO<Arret>{
 	{
 		Reseau reseau = jsonManager.getData();
 		ArrayList<Arret> listArret = new ArrayList<Arret>(); 
+		Boolean present;
 		
 		for(LigneDeBus l : reseau.getLesLignes()) {
 			for(Arret a : l.getListeArret()) {
-				listArret.add(a);
+				present = false;
+				for(Arret arret : listArret)
+				{
+					if(a.getNom().equals(arret.getNom()))
+						present = true;
+				}
+				if(present == false) {
+					listArret.add(a);
+				}
 			}
 		}
 		return listArret;

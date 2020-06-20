@@ -51,8 +51,8 @@ public class Arret {
 		this.cle = cle;
 	}
 
-	@Override
+	/*@Override
 	public String toString() {
 		return "Arret [nom=" + nom + ", position=" + position + ", listNomLigne=" + listNomLigne + ", cle=" + cle + "]";
-	}
+	}*/
 }

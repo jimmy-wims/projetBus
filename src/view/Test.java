@@ -32,7 +32,7 @@ public class Test {
 		ArrayList<LigneDeBus> listeLigne = new ArrayList<LigneDeBus>();
 		listeLigne.add(new LigneDeBus("uneLigne"));
 		listeLigne.add(new LigneDeBus("listeLigne"));
-		facade.ajouterArret("arret1", "ici", lesLignes, listeLigne);
+		//facade.ajouterArret("arret1", "ici", lesLignes, listeLigne);
 		for(String s : lesLignes)
 			facade.enregisterLigne(s);
 		//bus.create(new Bus(34));

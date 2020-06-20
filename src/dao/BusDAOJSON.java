@@ -70,7 +70,12 @@ public class BusDAOJSON extends DAO<Bus>{
 	
 	public ArrayList<Bus> findAll()
 	{
-		return jsonManager.getData().getLesBus();
+		ArrayList<Bus> bus = new  ArrayList<Bus>();
+		for(Bus b : jsonManager.getData().getLesBus()) {
+			b.setRoule(false);
+			bus.add(b);
+		}
+		return bus;
 	}
 	
 	public Bus findByName(String numero)

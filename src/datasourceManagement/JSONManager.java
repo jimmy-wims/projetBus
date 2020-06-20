@@ -69,17 +69,10 @@ public class JSONManager {
 		else
 		{
 			// Le fichier n'est pas vide, on utilise la bibliothèque google
-			// pour remplir les objets automatiquement
-			//Type type = new TypeToken<Reseau>(){}.getType();
-			//reseau=gson.fromJson(json, type);
-			
-			System.out.println("ppo -> " + json);
-			
+			// pour remplir les objets automatiquement			
 			Type type = new TypeToken<Reseau>(){}.getType();
 			reseau = gson.fromJson(json.toString(), type);
 		}
-		
-		System.out.println("ppo1 -> " + reseau);
 		
 		return reseau;
 	}

@@ -2,11 +2,12 @@ package modele;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Observable;
 
 import dao.DAO;
 import daoFactory.DAOFactory;
 
-public class ReseauFacade {
+public class ReseauFacade extends Observable {
 	
 	private static ReseauFacade facade;
 	private DAOFactory daoFactory;
@@ -16,6 +17,8 @@ public class ReseauFacade {
 	{
 		daoFactory = DAOFactory.getFactory(SourceDonnees.json);
 		reseau = new Reseau();
+		reseau.getLesLignes();
+		reseau.getLesBus();
 	}
 	
 	public  static synchronized ReseauFacade getInstance()
@@ -23,6 +26,11 @@ public class ReseauFacade {
 		if (facade  == null)
 			facade  = new ReseauFacade();
 		return facade;
+	}
+	
+	void setData(byte[] lbData) {
+		setChanged();
+		notifyObservers();
 	}
 	
 	public ArrayList<LigneDeBus> getLesLignes()
@@ -45,6 +53,7 @@ public class ReseauFacade {
 	public Bus ajouterBus(int numero)
 	{
 		Bus b = reseau.addBus(new Bus(numero));
+		setData(null);
 		return (Bus)daoFactory.getBusDAO().create(b);
 	}
 	
@@ -82,18 +91,21 @@ public class ReseauFacade {
 		return ligne;
 	}
 	
-	public ArrayList<LigneDeBus> ajouterArret(String nom, String position, ArrayList<String> listLigne, ArrayList<LigneDeBus> lesLignes)
+	public Arret ajouterArret(String nom, String position, ArrayList<String> lesLignes)
 	{
-		
-		for(LigneDeBus l : reseau.getLesLignes()) {
-			for(LigneDeBus li : lesLignes) {
-				if(l.getNom().equals(li.getNom())) {
-					l.addArret(new Arret(nom,position, listLigne));
+		Arret arret = new Arret(nom,position, lesLignes);
+		System.out.println(getLesLignes());
+		for(LigneDeBus l : getLesLignes()) {
+			for(String li : lesLignes) {
+				if(l.getNom().equals(li)) {
+					l.addArret(arret);
+					enregisterLigne(li);
 				}
 			}
 		}
+		setData(null);
 		
-		return lesLignes;
+		return arret;
 	}
 	
 	public void saveAll()
@@ -104,5 +116,10 @@ public class ReseauFacade {
 			daoFactory.getArretDAO().saveAll(l.getListeArret());
 			
 		daoFactory.getBusDAO().saveAll(reseau.getLesBus());
+	}
+	
+	public ArrayList<Arret> getLesArrets() 
+	{
+		return daoFactory.getArretDAO().findAll();
 	}
 }
