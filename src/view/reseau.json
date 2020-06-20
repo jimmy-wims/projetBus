@@ -1,32 +1,136 @@
 {
   "lesLignes": [
     {
-      "cle": 0,
-      "nom": "uneLigne",
+      "cle": 1,
+      "nom": "ligne1",
       "listeArret": [
         {
           "nom": "arret1",
           "position": "ici",
           "listNomLigne": [
-            "uneLigne",
-            "listeLigne"
+            "ligne1",
+			"ligne2",
+            "ligne4"
+          ],
+          "cle": 1
+        },
+        {
+          "nom": "arret2",
+          "position": "Sud",
+          "listNomLigne": [
+            "ligne1",
+            "ligne2",
+			"ligne5"
+          ],
+          "cle": 2
+        }
+      ]
+    },
+    {
+      "cle": 2,
+      "nom": "ligne2",
+      "listeArret": [
+        {
+          "nom": "arret3",
+          "position": "ici",
+          "listNomLigne": [
+            "ligne2",
+            "ligne3"
+          ],
+          "cle": 3
+        },
+        {
+          "nom": "arret2",
+          "position": "Sud",
+          "listNomLigne": [
+            "ligne1",
+            "ligne2",
+			"ligne5"
+          ],
+          "cle": 2
+        },
+		{
+          "nom": "arret1",
+          "position": "Sud",
+          "listNomLigne": [
+            "ligne1",
+			"ligne2",
+            "ligne4"
           ],
           "cle": 1
         }
       ]
     },
-    {
-      "cle": 0,
-      "nom": "listeLigne",
+	{
+      "cle": 3,
+      "nom": "ligne3",
       "listeArret": [
         {
-          "nom": "arret1",
+          "nom": "arret5",
           "position": "ici",
           "listNomLigne": [
-            "uneLigne",
-            "listeLigne"
+            "ligne3",
+            "ligne5"
+          ],
+          "cle": 5
+        },
+        {
+          "nom": "arret3",
+          "position": "Sud",
+          "listNomLigne": [
+           "ligne2",
+            "ligne3"
+          ],
+          "cle": 3
+        }
+      ]
+    },
+	{
+      "cle": 4,
+      "nom": "ligne4",
+      "listeArret": [
+        {
+          "nom": "arret4",
+          "position": "ici",
+          "listNomLigne": [
+            "ligne4"
+          ],
+          "cle": 4
+        },
+        {
+          "nom": "arret1",
+          "position": "Sud",
+          "listNomLigne": [
+            "ligne1",
+			"ligne2",
+            "ligne4"
           ],
           "cle": 1
+        }
+      ]
+    },
+	{
+      "cle": 5,
+      "nom": "ligne5",
+      "listeArret": [
+        {
+          "nom": "arret2",
+          "position": "ici",
+          "listNomLigne": [
+            "ligne1",
+            "ligne2",
+			"ligne5"
+          ],
+          "cle": 2
+        },
+        {
+          "nom": "arret5",
+          "position": "Sud",
+          "listNomLigne": [
+            "ligne3",
+            "ligne5"
+          ],
+          "cle": 5
         }
       ]
     }
@@ -35,6 +139,10 @@
     {
       "numero": 56,
       "cle": 0
+    },
+    {
+      "numero": 13,
+      "cle": 1
     }
   ]
 }
