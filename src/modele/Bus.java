@@ -6,10 +6,21 @@ public class Bus {
 	private Boolean roule;
 	private LigneDeBus ligne;
 	private int numeroArret;
+	private Boolean enRoute;
 
 	public Bus(int numero) {
 		this.numero = numero;
 		this.roule = false;
+		this.enRoute = false;
+	}
+
+	public Bus(int numero, int cle, Boolean roule, LigneDeBus ligne, int numeroArret, Boolean enRoute) {
+		this.numero = numero;
+		this.cle = cle;
+		this.roule = roule;
+		this.ligne = ligne;
+		this.numeroArret = numeroArret;
+		this.enRoute = enRoute;
 	}
 
 	public int getNumero() {
@@ -51,5 +62,13 @@ public class Bus {
 
 	public void setNumeroArret(int numeroArret) {
 		this.numeroArret = numeroArret;
+	}
+
+	public Boolean getEnRoute() {
+		return enRoute;
+	}
+
+	public void setEnRoute(Boolean enRoute) {
+		this.enRoute = enRoute;
 	}
 }

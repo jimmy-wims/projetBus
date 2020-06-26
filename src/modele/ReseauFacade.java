@@ -122,4 +122,11 @@ public class ReseauFacade extends Observable {
 	{
 		return daoFactory.getArretDAO().findAll();
 	}
+	
+	public void modifierBus(Bus bus, LigneDeBus ligne) {
+		bus.setLigne(ligne);
+		daoFactory.getBusDAO().update(bus);
+		System.out.println("pppp5 " + ligne);
+		setData(null);
+	}
 }

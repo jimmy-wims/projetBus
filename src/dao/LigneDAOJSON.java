@@ -74,7 +74,6 @@ public class LigneDAOJSON extends DAO<LigneDeBus>{
 	
 	public ArrayList<LigneDeBus> findAll()
 	{
-		System.out.println("ppp  " + jsonManager.getData().getLesLignes() );
 		return jsonManager.getData().getLesLignes();
 	}
 	

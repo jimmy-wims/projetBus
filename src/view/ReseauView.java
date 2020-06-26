@@ -3,6 +3,8 @@ package view;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
  
@@ -13,9 +15,11 @@ import com.mxgraph.view.mxGraph;
 
 import modele.Arret;
 import modele.Bus;
+import modele.BusThread;
 import modele.Lien;
 import modele.LigneDeBus;
 import modele.ReseauFacade;
+import modele.SaisieThread;
  
 public class ReseauView extends JFrame implements Observer {
  
@@ -25,29 +29,63 @@ public class ReseauView extends JFrame implements Observer {
 	private static ArrayList<Bus> listBus;
 	private static mxGraph graph = new mxGraph();
 	private static Object parent = graph.getDefaultParent();
+	private static ArrayList<BusThread> listThread = new ArrayList<BusThread>();
+	private static ArrayList<LigneDeBus> listLigne = new ArrayList<LigneDeBus>();
+	private static ArrayList<Object> lesObjetArrets = new ArrayList<Object>();
+    private static ArrayList<Lien> lesLiens = new ArrayList<Lien>();
+    private static Boolean dessine;
  
 	public ReseauView() {
 		super("Réseau de bus");
 		init();
 		listBus = facade.getLesBus();
+		for(Bus b : listBus) {
+			listThread.add(new BusThread("" + b.getNumero()));
+		}
+		listLigne = facade.getLesLignes();
 		mxGraphComponent graphComponent = new mxGraphComponent(graph);
 		getContentPane().add(graphComponent);
-		draw();
+		dessine();
 	}
 
 	void init() {
 		facade.addObserver(this); // (2) ajout d'observateur
 	}
 	 
+	@SuppressWarnings("deprecation")
 	public void update(Observable observable, Object objectConcerne) {
-		draw();  // (3) traitement de l'observation
+		listBus = facade.getLesBus();
+		dessine = false;
+		for(int i = 0; i < listBus.size(); i++) {
+			if(listThread.get(i).getName().equals("" + listBus.get(i).getNumero())) {
+				LigneDeBus ligneBt = listThread.get(i).getLigne();
+				LigneDeBus ligneBus = listBus.get(i).getLigne();
+				if(ligneBt!=null && ligneBus!= null && !ligneBt.getNom().equals(ligneBus.getNom())) {
+					listThread.get(i).setLigne(ligneBus);
+					listThread.get(i).setNumeroArret(0);
+					listThread.get(i).setEnRoute(false);
+					listThread.get(i).setRoule(true);
+				}
+			}
+		}
+		reset();
+		dessine = true;
 		System.out.println("notification");
 	}
+	
+	public Object editLien(BusThread bt) {
+		int nLien = 0;
+		for(int i = 0; i < lesLiens.size(); i++) {
+			Lien lien = lesLiens.get(i);
+			Arret arret =  bt.getLigne().getListeArret().get(bt.getNumeroArret());
+			Arret arretPrecedent = bt.getLigne().getListeArret().get(bt.getNumeroArret() - 1);
+			if(lien.getCle1() == arretPrecedent.getCle() && lien.getCle2() == arret.getCle())
+				nLien = i;
+		}
+		return lesLiens.get(nLien).getObj();
+	}
   
-	public void draw() {
-		System.out.println("la + " + listBus.get(1).getNumeroArret());
-	    ArrayList<Object> lesObjetArrets = new ArrayList<Object>();
-	    ArrayList<Lien> lesLiens = new ArrayList<Lien>();
+	public void dessine() {
 	    int x = 100;
 	    int y = 30;
 	    
@@ -78,16 +116,6 @@ public class ReseauView extends JFrame implements Observer {
 	    graph.setCellsEditable(false); //empeche la modification du texte des cellules
 	    graph.setCellsResizable(false); //empeche la redimension des cellules
 	    
-	    for(Bus b : listBus) {
-	    	System.out.println("size " + b.getRoule());
-	    	if(b.getRoule()) {
-	    		Arret a = b.getLigne().getListeArret().get(b.getNumeroArret());
-	    		int numArret = a.getCle()-1;
-	    		System.out.println("ppppppppppppppppppp " + numArret);
-	    		//graph.removeCells(new Object[] {test.get(numArret)});
-	    		graph.getModel().setValue(lesObjetArrets.get(numArret), a.getNom() + " : Bus " + b.getNumero());
-	    	}
-	    }
 	    
 	    for(LigneDeBus l : facade.getLesLignes()) {
 	    	ArrayList<Arret> lesArrets = l.getListeArret();
@@ -102,13 +130,128 @@ public class ReseauView extends JFrame implements Observer {
 	    			
 	    	}
 	    }
-	    
-	    for(Lien l : lesLiens) {
-	    	System.out.println(l);
-	    }
 	 
 	    getContentPane().repaint();
-	    //displayModel((mxCell) parent,"");
+	}
+	
+	public void redessine() {
+	    int x = 100;
+	    int y = 30;
+	    
+	    int nbCells = 0;
+	    String contenuCell;
+	    
+	    graph.getModel().beginUpdate();
+	   
+	    graph.setCellsMovable(false); //empeche l'utilisateur de bouger les cellules
+	    graph.setCellsEditable(false); //empeche la modification du texte des cellules
+	    graph.setCellsResizable(false); //empeche la redimension des cellules
+	    
+	    
+	    
+	    for(BusThread b : listThread) {
+	    	if(b.getLigne() != null && b.getAttend() == false) {
+	    		System.out.println(b.getName() + " -> " + b.getEnRoute() + " - roule : " + b.getRoule());
+		    	if(b.getRoule()) {
+		    		b.setTpsAttente(1000 + (int)(Math.random() * ((10000 - 1000) + 1)));
+		    		b.setAttend(true);
+		    		if(!b.getEnRoute()) {
+			    		if(b.getNumeroArret() > 0) {
+			    			Object obj = editLien(b);
+				    		contenuCell = (String) ((mxCell) obj).getValue();
+				    		contenuCell = contenuCell.replace(b.getName(), "");
+				    		contenuCell = contenuCell.replace(" - ", "");
+				    		if(contenuCell.equals(""))
+				    			graph.getModel().setValue(obj, "");
+				    		else
+				    			graph.getModel().setValue(obj, contenuCell);
+			    		}
+			    		Arret a = b.getLigne().getListeArret().get(b.getNumeroArret());
+			    		int numArret = a.getCle()-1;
+			    		contenuCell = (String) ((mxCell) lesObjetArrets.get(numArret)).getValue();
+			    		if(contenuCell.contains("Bus"))
+			    			graph.getModel().setValue(lesObjetArrets.get(numArret), ((mxCell) lesObjetArrets.get(numArret)).getValue() + " - " + b.getName());
+			    		else
+			    			graph.getModel().setValue(lesObjetArrets.get(numArret), contenuCell + " : Bus " + b.getName());
+			    		b.setEnRoute(true);
+						b.setNumeroArret(b.getNumeroArret() + 1);
+						if(b.getNumeroArret() > b.getLigne().getListeArret().size()-1) {
+							b.setRoule(false);
+						}
+		    		}
+		    		else
+		    		{
+			    		Arret a = b.getLigne().getListeArret().get(b.getNumeroArret()-1);
+			    		int numArret = a.getCle()-1;
+			    		contenuCell = (String) ((mxCell) lesObjetArrets.get(numArret)).getValue();
+			    		contenuCell = contenuCell.replace("" + b.getName(), "");
+			    		contenuCell = contenuCell.replace(" - ", "");
+			    		String[] tabContenu = contenuCell.split(" : Bus ");
+			    		System.out.println("");
+			    		System.out.println("");
+			    		for(String s : tabContenu) {
+			    			System.out.print(s);
+			    		}
+			    		System.out.print(".");
+			    		System.out.println("");
+			    		if(tabContenu.length == 1)
+			    			graph.getModel().setValue(lesObjetArrets.get(numArret), a.getNom());
+			    		else {
+			    			System.out.println("okokokkooko");
+			    			graph.getModel().setValue(lesObjetArrets.get(numArret), contenuCell);
+			    		}
+			    		Object obj = editLien(b);
+			    		contenuCell = (String) ((mxCell) obj).getValue();
+			    		if(contenuCell.equals(""))
+			    			graph.getModel().setValue(obj, b.getName());
+			    		else
+			    			graph.getModel().setValue(obj, contenuCell + " - " + b.getName());
+			    		b.setEnRoute(false);
+		    		}
+		    	} else {
+		    		if(b.getNumeroArret() != 0) {
+		    			Arret a = b.getLigne().getListeArret().get(b.getNumeroArret()-1);
+			    		int numArret = a.getCle()-1;
+			    		contenuCell = (String) ((mxCell) lesObjetArrets.get(numArret)).getValue();
+			    		contenuCell = contenuCell.replace("" + b.getName(), "");
+			    		contenuCell = contenuCell.replace(" - ", "");
+			    		String[] tabContenu = contenuCell.split(" : Bus ");
+			    		if(tabContenu.length == 1)
+			    			graph.getModel().setValue(lesObjetArrets.get(numArret), a.getNom());
+			    		else {
+			    			System.out.println("okokokkooko");
+			    			graph.getModel().setValue(lesObjetArrets.get(numArret), contenuCell);
+			    		}
+			    		b.setNumeroArret(0);
+		    		}
+		    		b.setAttend(false);
+		    		b.setLigne(null);
+		    	}
+	    	}
+	    }
+	 
+	    graph.getModel().endUpdate();
+
+	    getContentPane().repaint();
+	    dessine = true;
+	}
+	
+	public void reset() {
+		graph.getModel().beginUpdate();
+		
+		for(Object objet : lesObjetArrets) {
+			graph.getModel().remove(objet);
+		}
+		
+		for(Object objet : lesLiens) {
+			graph.getModel().remove(objet);
+		}
+		
+		graph.getModel().endUpdate();
+		
+		lesObjetArrets.clear();
+		lesLiens.clear();
+		dessine();
 	}
 
 	/**
@@ -120,32 +263,46 @@ public class ReseauView extends JFrame implements Observer {
 		frame.setSize(1000, 650);
 		frame.setVisible(true);
 		Thread thread = new Thread();
-    
-		listBus.get(1).setRoule(true);
-		listBus.get(1).setLigne(facade.findLigne("ligne2"));
+		SaisieThread saisieThread = new SaisieThread("saisie", listBus, listLigne);
+		int max = facade.getLesLignes().size();
+		int nLigne;
+		dessine = true;
    
 		while(true) {
-			try {
-				java.lang.Thread.sleep(10000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			frame.draw();
-			listBus.get(1).setNumeroArret(listBus.get(1).getNumeroArret()+1);
-		}
-    
-    /*ArrayList<String> lignes = new ArrayList<>();
-    lignes.add("uneLigne");
-    lignes.add("listeLigne");
-    facade.ajouterArret("Arret2","Sud",lignes);*/
-	}
-  
-	private void displayModel(mxCell cell, String indent) {
-		System.out.println(indent+cell.getValue()+"("+cell.getClass().getName()+")");
-		int nbChilds = cell.getChildCount();
-		indent = indent + "  ";
-		for (int i=0; i<nbChilds ; i++) {
-			displayModel((mxCell) cell.getChildAt(i), indent);
+				for(BusThread bt : listThread) {
+					if(bt.getRoule() == false && bt.getAttend() == false && bt.getNumeroArret() == 0) {
+						nLigne = (int)(Math.random() * ((max) + 1));
+						if(nLigne < listLigne.size()) { 
+							bt.setLigne(listLigne.get(nLigne));
+							bt.setNumeroArret(0);
+							bt.setRoule(true);
+							bt.setEnRoute(false);
+							bt.setTpsAttente(5000 + (int)(Math.random() * ((10000 - 5000) + 1)));
+							dessine = true;
+						} else {
+							bt.setNumeroArret(0);
+							bt.setRoule(false);
+							bt.setLigne(null);
+							bt.setTpsAttente(0);
+						}
+					}
+					if(!bt.isAlive())
+						bt.start();
+				}
+				if(dessine == true)
+					frame.redessine();
+				
+				try {
+					Thread.sleep(1000);
+				} catch(Exception e) {}
+				
+				if(!saisieThread.isAlive())
+					saisieThread.start();
+				
+				if(saisieThread.isModifier()) {
+					facade.modifierBus(saisieThread.getBus(), saisieThread.getLigne());
+					saisieThread.setModifier(false);
+				}
 		}
 	}
 }

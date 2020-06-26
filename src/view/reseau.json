@@ -9,7 +9,7 @@
           "position": "ici",
           "listNomLigne": [
             "ligne1",
-			"ligne2",
+            "ligne2",
             "ligne4"
           ],
           "cle": 1
@@ -20,7 +20,7 @@
           "listNomLigne": [
             "ligne1",
             "ligne2",
-			"ligne5"
+            "ligne5"
           ],
           "cle": 2
         }
@@ -45,23 +45,23 @@
           "listNomLigne": [
             "ligne1",
             "ligne2",
-			"ligne5"
+            "ligne5"
           ],
           "cle": 2
         },
-		{
+        {
           "nom": "arret1",
           "position": "Sud",
           "listNomLigne": [
             "ligne1",
-			"ligne2",
+            "ligne2",
             "ligne4"
           ],
           "cle": 1
         }
       ]
     },
-	{
+    {
       "cle": 3,
       "nom": "ligne3",
       "listeArret": [
@@ -78,14 +78,14 @@
           "nom": "arret3",
           "position": "Sud",
           "listNomLigne": [
-           "ligne2",
+            "ligne2",
             "ligne3"
           ],
           "cle": 3
         }
       ]
     },
-	{
+    {
       "cle": 4,
       "nom": "ligne4",
       "listeArret": [
@@ -102,14 +102,14 @@
           "position": "Sud",
           "listNomLigne": [
             "ligne1",
-			"ligne2",
+            "ligne2",
             "ligne4"
           ],
           "cle": 1
         }
       ]
     },
-	{
+    {
       "cle": 5,
       "nom": "ligne5",
       "listeArret": [
@@ -119,7 +119,7 @@
           "listNomLigne": [
             "ligne1",
             "ligne2",
-			"ligne5"
+            "ligne5"
           ],
           "cle": 2
         },
@@ -138,11 +138,61 @@
   "lesBus": [
     {
       "numero": 56,
-      "cle": 0
+      "cle": 0,
+      "ligne": {
+        "cle": 4,
+        "nom": "ligne4",
+        "listeArret": [
+          {
+            "nom": "arret4",
+            "position": "ici",
+            "listNomLigne": [
+              "ligne4"
+            ],
+            "cle": 4
+          },
+          {
+            "nom": "arret1",
+            "position": "Sud",
+            "listNomLigne": [
+              "ligne1",
+              "ligne2",
+              "ligne4"
+            ],
+            "cle": 1
+          }
+        ]
+      },
+      "numeroArret": 0
     },
     {
       "numero": 13,
-      "cle": 1
+      "cle": 1,
+      "ligne": {
+        "cle": 4,
+        "nom": "ligne4",
+        "listeArret": [
+          {
+            "nom": "arret4",
+            "position": "ici",
+            "listNomLigne": [
+              "ligne4"
+            ],
+            "cle": 4
+          },
+          {
+            "nom": "arret1",
+            "position": "Sud",
+            "listNomLigne": [
+              "ligne1",
+              "ligne2",
+              "ligne4"
+            ],
+            "cle": 1
+          }
+        ]
+      },
+      "numeroArret": 0
     }
   ]
 }

@@ -54,6 +54,7 @@ public class BusDAOJSON extends DAO<Bus>{
 			if(b.getCle() == obj.getCle())
 			{
 				b.setNumero(obj.getNumero());
+				b.setLigne(obj.getLigne());
 			}
 		}
 		jsonManager.setData(reseau);
