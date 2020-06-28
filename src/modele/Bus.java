@@ -3,24 +3,17 @@ package modele;
 public class Bus {
 	private int numero;
 	private int cle;
-	private Boolean roule;
-	private LigneDeBus ligne;
-	private int numeroArret;
-	private Boolean enRoute;
+	private String nomLigne;
 
 	public Bus(int numero) {
 		this.numero = numero;
-		this.roule = false;
-		this.enRoute = false;
+		nomLigne = "";
 	}
 
-	public Bus(int numero, int cle, Boolean roule, LigneDeBus ligne, int numeroArret, Boolean enRoute) {
+	public Bus(int numero, int cle, String ligne) {
 		this.numero = numero;
 		this.cle = cle;
-		this.roule = roule;
-		this.ligne = ligne;
-		this.numeroArret = numeroArret;
-		this.enRoute = enRoute;
+		this.nomLigne = ligne;
 	}
 
 	public int getNumero() {
@@ -39,36 +32,11 @@ public class Bus {
 		this.cle = cle;
 	}
 
-	public Boolean getRoule() {
-		return roule;
+	public String getNomLigne() {
+		return nomLigne;
 	}
 
-	public void setRoule(Boolean roule) {
-		this.roule = roule;
-	}
-
-	public LigneDeBus getLigne() {
-		return ligne;
-	}
-
-	public void setLigne(LigneDeBus ligne) {
-		this.ligne = ligne;
-		this.numeroArret = 0;
-	}
-
-	public int getNumeroArret() {
-		return numeroArret;
-	}
-
-	public void setNumeroArret(int numeroArret) {
-		this.numeroArret = numeroArret;
-	}
-
-	public Boolean getEnRoute() {
-		return enRoute;
-	}
-
-	public void setEnRoute(Boolean enRoute) {
-		this.enRoute = enRoute;
+	public void setNomLigne(String nomLigne) {
+		this.nomLigne = nomLigne;
 	}
 }

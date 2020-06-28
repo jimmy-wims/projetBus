@@ -7,7 +7,7 @@ import modele.Reseau;
 
 public class LigneDAOJSON extends DAO<LigneDeBus>{
 	
-	private static int newCle = 0;
+	private static int newCle = 1;
 	private static LigneDAOJSON LigneDeBusDAO = new LigneDAOJSON();
 	
 	private LigneDAOJSON()

@@ -138,61 +138,13 @@
   "lesBus": [
     {
       "numero": 56,
-      "cle": 0,
-      "ligne": {
-        "cle": 4,
-        "nom": "ligne4",
-        "listeArret": [
-          {
-            "nom": "arret4",
-            "position": "ici",
-            "listNomLigne": [
-              "ligne4"
-            ],
-            "cle": 4
-          },
-          {
-            "nom": "arret1",
-            "position": "Sud",
-            "listNomLigne": [
-              "ligne1",
-              "ligne2",
-              "ligne4"
-            ],
-            "cle": 1
-          }
-        ]
-      },
-      "numeroArret": 0
+      "cle": 1,
+      "nomLigne": "depot"
     },
     {
       "numero": 13,
-      "cle": 1,
-      "ligne": {
-        "cle": 4,
-        "nom": "ligne4",
-        "listeArret": [
-          {
-            "nom": "arret4",
-            "position": "ici",
-            "listNomLigne": [
-              "ligne4"
-            ],
-            "cle": 4
-          },
-          {
-            "nom": "arret1",
-            "position": "Sud",
-            "listNomLigne": [
-              "ligne1",
-              "ligne2",
-              "ligne4"
-            ],
-            "cle": 1
-          }
-        ]
-      },
-      "numeroArret": 0
+      "cle": 2,
+      "nomLigne": "ligne1"
     }
   ]
 }

@@ -50,22 +50,31 @@ public class ReseauView extends JFrame implements Observer {
 	}
 	 
 	public void update(Observable observable, Object objectConcerne) {
-		listBus = facade.getLesBus();
+		Bus busModif = (Bus)objectConcerne;
+		String ligneBus = busModif.getNomLigne();
 		dessine = false;
 		for(int i = 0; i < listBus.size(); i++) {
-			if(listThread.get(i).getName().equals("" + listBus.get(i).getNumero())) {
-				LigneDeBus ligneBt = listThread.get(i).getLigne();
-				LigneDeBus ligneBus = listBus.get(i).getLigne();
-				if(ligneBt!=null && ligneBus!= null && !ligneBt.getNom().equals(ligneBus.getNom())) {
-					listThread.get(i).setLigne(ligneBus);
+			if(listThread.get(i).getName().equals("" + busModif.getNumero())) {
+				if(busModif.getNomLigne().equals("depot")) {
+					listThread.get(i).setLigne(null);
 					listThread.get(i).setNumeroArret(0);
 					listThread.get(i).setEnRoute(false);
-					listThread.get(i).setRoule(true);
+					listThread.get(i).setRoule(false);
+					listThread.get(i).setTpsAttente(3000);
+					listThread.get(i).setAttend(true);
+				} else {
+					LigneDeBus ligneBt = listThread.get(i).getLigne();
+					if(ligneBt!=null && ligneBus!= null && !ligneBt.getNom().equals(ligneBus)) {
+						listThread.get(i).setLigne(facade.findLigne(ligneBus));
+						listThread.get(i).setNumeroArret(0);
+						listThread.get(i).setEnRoute(false);
+						listThread.get(i).setRoule(true);
+					}
 				}
 			}
 		}
 		reset();
-		dessine = true;
+		redessine();
 		System.out.println("notification");
 	}
 	
@@ -139,13 +148,9 @@ public class ReseauView extends JFrame implements Observer {
 	    graph.setCellsEditable(false); //empeche la modification du texte des cellules
 	    graph.setCellsResizable(false); //empeche la redimension des cellules
 	    
-	    
-	    
 	    for(BusThread b : listThread) {
 	    	if(b.getLigne() != null && b.getAttend() == false) {
 		    	if(b.getRoule()) {
-		    		b.setTpsAttente(1000 + (int)(Math.random() * ((10000 - 1000) + 1)));
-		    		b.setAttend(true);
 		    		if(!b.getEnRoute()) {
 			    		if(b.getNumeroArret() > 0) {
 			    			Object obj = editLien(b);
@@ -169,6 +174,7 @@ public class ReseauView extends JFrame implements Observer {
 						if(b.getNumeroArret() > b.getLigne().getListeArret().size()-1) {
 							b.setRoule(false);
 						}
+						b.setTpsAttente(2000 + (int)(Math.random() * ((5000 - 2000) + 1)));
 		    		}
 		    		else
 		    		{
@@ -190,6 +196,7 @@ public class ReseauView extends JFrame implements Observer {
 			    		else
 			    			graph.getModel().setValue(obj, contenuCell + " - " + b.getName());
 			    		b.setEnRoute(false);
+			    		b.setTpsAttente(3000 + (int)(Math.random() * ((8000 - 3000) + 1)));
 		    		}
 		    	} else {
 		    		if(b.getNumeroArret() != 0) {
@@ -206,9 +213,10 @@ public class ReseauView extends JFrame implements Observer {
 			    		}
 			    		b.setNumeroArret(0);
 		    		}
-		    		b.setAttend(false);
+		    		b.setTpsAttente(4000);
 		    		b.setLigne(null);
 		    	}
+		    	b.setAttend(true);
 	    	}
 	    }
 	 
@@ -281,7 +289,10 @@ public class ReseauView extends JFrame implements Observer {
 				saisieThread.start();
 				
 			if(saisieThread.isModifier()) {
-				facade.modifierBus(saisieThread.getBus(), saisieThread.getLigne());
+				if(saisieThread.getLigne() != null)
+					facade.modifierBus(saisieThread.getBus(), saisieThread.getLigne().getNom());
+				else
+					facade.modifierBus(saisieThread.getBus(), "depot");
 				saisieThread.setModifier(false);
 			}
 		}

@@ -7,7 +7,7 @@ import modele.Reseau;
 
 public class BusDAOJSON extends DAO<Bus>{
 	
-	private static int newCle = 0;
+	private static int newCle = 1;
 	private static BusDAOJSON BusDAO = new BusDAOJSON();
 	
 	private BusDAOJSON()
@@ -54,7 +54,7 @@ public class BusDAOJSON extends DAO<Bus>{
 			if(b.getCle() == obj.getCle())
 			{
 				b.setNumero(obj.getNumero());
-				b.setLigne(obj.getLigne());
+				b.setNomLigne(obj.getNomLigne());
 			}
 		}
 		jsonManager.setData(reseau);
@@ -73,7 +73,6 @@ public class BusDAOJSON extends DAO<Bus>{
 	{
 		ArrayList<Bus> bus = new  ArrayList<Bus>();
 		for(Bus b : jsonManager.getData().getLesBus()) {
-			b.setRoule(false);
 			bus.add(b);
 		}
 		return bus;

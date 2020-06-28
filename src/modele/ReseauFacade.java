@@ -25,9 +25,14 @@ public class ReseauFacade extends Observable {
 		return facade;
 	}
 	
-	void setData(byte[] lbData) {
+	void setData(byte[] lbData, Bus b) {
 		setChanged();
-		notifyObservers();
+		notifyObservers(b);
+	}
+	
+	void setData(byte[] lbData, Arret a) {
+		setChanged();
+		notifyObservers(a);
 	}
 	
 	public ArrayList<LigneDeBus> getLesLignes()
@@ -50,7 +55,7 @@ public class ReseauFacade extends Observable {
 	public Bus ajouterBus(int numero)
 	{
 		Bus b = reseau.addBus(new Bus(numero));
-		setData(null);
+		setData(null, b);
 		return (Bus)daoFactory.getBusDAO().create(b);
 	}
 	
@@ -65,14 +70,10 @@ public class ReseauFacade extends Observable {
 		Arret arret;
 		LigneDeBus ligne = null;
 		
-		System.out.println("apple ->" + nom + ".");
-		
 		for(LigneDeBus l : reseau.getLesLignes())
 		{
-			System.out.println("pomme ->" + l.getNom() + ".");
 			if(l.getNom().equals(nom))
 			{
-				
 				ligne = l;
 			}
 		}
@@ -91,7 +92,6 @@ public class ReseauFacade extends Observable {
 	public Arret ajouterArret(String nom, String position, ArrayList<String> lesLignes)
 	{
 		Arret arret = new Arret(nom,position, lesLignes);
-		System.out.println(getLesLignes());
 		for(LigneDeBus l : getLesLignes()) {
 			for(String li : lesLignes) {
 				if(l.getNom().equals(li)) {
@@ -100,7 +100,7 @@ public class ReseauFacade extends Observable {
 				}
 			}
 		}
-		setData(null);
+		setData(null, arret);
 		
 		return arret;
 	}
@@ -120,10 +120,9 @@ public class ReseauFacade extends Observable {
 		return daoFactory.getArretDAO().findAll();
 	}
 	
-	public void modifierBus(Bus bus, LigneDeBus ligne) {
-		bus.setLigne(ligne);
+	public void modifierBus(Bus bus, String ligne) {
+		bus.setNomLigne(ligne);
 		daoFactory.getBusDAO().update(bus);
-		System.out.println("pppp5 " + ligne);
-		setData(null);
+		setData(null, bus);
 	}
 }

@@ -14,11 +14,9 @@ public class Lien {
 		return obj;
 	}
 
-
 	public void setObj(Object obj) {
 		this.obj = obj;
 	}
-
 
 	public int getCle1() {
 		return cle1;

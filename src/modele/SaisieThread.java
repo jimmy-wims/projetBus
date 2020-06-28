@@ -25,21 +25,25 @@ public class SaisieThread extends Thread{
 		while(true) {
 			System.out.println("Veuillez saisir un numéro");
 			Scanner sc = new Scanner(System.in);
-			int numeroBus = sc.nextInt();
-			sc.close();
+			numBus = sc.nextInt();
 			System.out.println("Veuillez saisir le nom d'une ligne");
-			sc = new Scanner(System.in);
-			sc.close();
-			String nomLigne = sc.nextLine();
+			sc.nextLine();
+			nomLigne = sc.nextLine();
 			try {
 				for(Bus b : listBus) {
-					if(b.getNumero() == numeroBus) {
-						for(LigneDeBus l : listLigne)
-						{
-							if(l.getNom().equals(nomLigne)) {
-								bus = b;
-								ligne = l;
-								modifier = true;
+					if(b.getNumero() == numBus) {
+						if(nomLigne.equals("depot")) {
+							bus = b;
+							ligne = null;
+							modifier = true;
+						} else {
+							for(LigneDeBus l : listLigne)
+							{
+								if(l.getNom().equals(nomLigne)) {
+									bus = b;
+									ligne = l;
+									modifier = true;
+								}
 							}
 						}
 					}

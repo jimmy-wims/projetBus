@@ -8,7 +8,7 @@ import modele.Reseau;
 
 public class ArretDAOJSON extends DAO<Arret>{
 	
-	private static int newCle = 0;
+	private static int newCle = 1;
 	private static ArretDAOJSON arretDAO = new ArretDAOJSON();
 	
 	private ArretDAOJSON()
