@@ -3,13 +3,10 @@ package view;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Scanner;
-import java.util.regex.Pattern;
 
 import javax.swing.JFrame;
  
 import com.mxgraph.model.mxCell;
-import com.mxgraph.model.mxGeometry;
 import com.mxgraph.swing.mxGraphComponent;
 import com.mxgraph.view.mxGraph;
 
@@ -52,7 +49,6 @@ public class ReseauView extends JFrame implements Observer {
 		facade.addObserver(this); // (2) ajout d'observateur
 	}
 	 
-	@SuppressWarnings("deprecation")
 	public void update(Observable observable, Object objectConcerne) {
 		listBus = facade.getLesBus();
 		dessine = false;
@@ -135,10 +131,6 @@ public class ReseauView extends JFrame implements Observer {
 	}
 	
 	public void redessine() {
-	    int x = 100;
-	    int y = 30;
-	    
-	    int nbCells = 0;
 	    String contenuCell;
 	    
 	    graph.getModel().beginUpdate();
@@ -151,7 +143,6 @@ public class ReseauView extends JFrame implements Observer {
 	    
 	    for(BusThread b : listThread) {
 	    	if(b.getLigne() != null && b.getAttend() == false) {
-	    		System.out.println(b.getName() + " -> " + b.getEnRoute() + " - roule : " + b.getRoule());
 		    	if(b.getRoule()) {
 		    		b.setTpsAttente(1000 + (int)(Math.random() * ((10000 - 1000) + 1)));
 		    		b.setAttend(true);
@@ -187,17 +178,9 @@ public class ReseauView extends JFrame implements Observer {
 			    		contenuCell = contenuCell.replace("" + b.getName(), "");
 			    		contenuCell = contenuCell.replace(" - ", "");
 			    		String[] tabContenu = contenuCell.split(" : Bus ");
-			    		System.out.println("");
-			    		System.out.println("");
-			    		for(String s : tabContenu) {
-			    			System.out.print(s);
-			    		}
-			    		System.out.print(".");
-			    		System.out.println("");
 			    		if(tabContenu.length == 1)
 			    			graph.getModel().setValue(lesObjetArrets.get(numArret), a.getNom());
 			    		else {
-			    			System.out.println("okokokkooko");
 			    			graph.getModel().setValue(lesObjetArrets.get(numArret), contenuCell);
 			    		}
 			    		Object obj = editLien(b);
@@ -219,7 +202,6 @@ public class ReseauView extends JFrame implements Observer {
 			    		if(tabContenu.length == 1)
 			    			graph.getModel().setValue(lesObjetArrets.get(numArret), a.getNom());
 			    		else {
-			    			System.out.println("okokokkooko");
 			    			graph.getModel().setValue(lesObjetArrets.get(numArret), contenuCell);
 			    		}
 			    		b.setNumeroArret(0);
@@ -262,47 +244,46 @@ public class ReseauView extends JFrame implements Observer {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(1000, 650);
 		frame.setVisible(true);
-		Thread thread = new Thread();
 		SaisieThread saisieThread = new SaisieThread("saisie", listBus, listLigne);
 		int max = facade.getLesLignes().size();
 		int nLigne;
 		dessine = true;
    
 		while(true) {
-				for(BusThread bt : listThread) {
-					if(bt.getRoule() == false && bt.getAttend() == false && bt.getNumeroArret() == 0) {
-						nLigne = (int)(Math.random() * ((max) + 1));
-						if(nLigne < listLigne.size()) { 
-							bt.setLigne(listLigne.get(nLigne));
-							bt.setNumeroArret(0);
-							bt.setRoule(true);
-							bt.setEnRoute(false);
-							bt.setTpsAttente(5000 + (int)(Math.random() * ((10000 - 5000) + 1)));
-							dessine = true;
-						} else {
-							bt.setNumeroArret(0);
-							bt.setRoule(false);
-							bt.setLigne(null);
-							bt.setTpsAttente(0);
-						}
+			for(BusThread bt : listThread) {
+				if(bt.getRoule() == false && bt.getAttend() == false && bt.getNumeroArret() == 0) {
+					nLigne = (int)(Math.random() * ((max) + 1));
+					if(nLigne < listLigne.size()) { 
+						bt.setLigne(listLigne.get(nLigne));
+						bt.setNumeroArret(0);
+						bt.setRoule(true);
+						bt.setEnRoute(false);
+						bt.setTpsAttente(5000 + (int)(Math.random() * ((10000 - 5000) + 1)));
+						dessine = true;
+					} else {
+						bt.setNumeroArret(0);
+						bt.setRoule(false);
+						bt.setLigne(null);
+						bt.setTpsAttente(0);
 					}
+				}
 					if(!bt.isAlive())
 						bt.start();
-				}
-				if(dessine == true)
-					frame.redessine();
+			}
+			if(dessine == true)
+				frame.redessine();
 				
-				try {
-					Thread.sleep(1000);
-				} catch(Exception e) {}
+			try {
+				Thread.sleep(1000);
+			} catch(Exception e) {}
 				
-				if(!saisieThread.isAlive())
-					saisieThread.start();
+			if(!saisieThread.isAlive())
+				saisieThread.start();
 				
-				if(saisieThread.isModifier()) {
-					facade.modifierBus(saisieThread.getBus(), saisieThread.getLigne());
-					saisieThread.setModifier(false);
-				}
+			if(saisieThread.isModifier()) {
+				facade.modifierBus(saisieThread.getBus(), saisieThread.getLigne());
+				saisieThread.setModifier(false);
+			}
 		}
 	}
 }

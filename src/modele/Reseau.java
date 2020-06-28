@@ -2,8 +2,6 @@ package modele;
 
 import java.util.ArrayList;
 
-import daoFactory.DAOFactory;
-
 public class Reseau {
 	private ArrayList<LigneDeBus> lesLignes;
 	private ArrayList<Bus> lesBus;

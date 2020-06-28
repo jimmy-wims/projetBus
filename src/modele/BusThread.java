@@ -1,7 +1,5 @@
 package modele;
 
-import java.util.Observable;
-
 public class BusThread extends Thread{
 	private int tpsAttente;
 	private Boolean roule;

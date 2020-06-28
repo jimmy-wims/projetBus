@@ -1,10 +1,7 @@
 package modele;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Observable;
-
-import dao.DAO;
 import daoFactory.DAOFactory;
 
 public class ReseauFacade extends Observable {

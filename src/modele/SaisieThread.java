@@ -1,7 +1,6 @@
 package modele;
 
 import java.util.ArrayList;
-import java.util.Observable;
 import java.util.Scanner;
 
 public class SaisieThread extends Thread{
@@ -27,8 +26,10 @@ public class SaisieThread extends Thread{
 			System.out.println("Veuillez saisir un numéro");
 			Scanner sc = new Scanner(System.in);
 			int numeroBus = sc.nextInt();
+			sc.close();
 			System.out.println("Veuillez saisir le nom d'une ligne");
 			sc = new Scanner(System.in);
+			sc.close();
 			String nomLigne = sc.nextLine();
 			try {
 				for(Bus b : listBus) {
